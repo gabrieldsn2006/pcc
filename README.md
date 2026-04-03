@@ -1,241 +1,58 @@
-# pcc
 
-# Resolução de Problemas com Grafos
-Orientador: Prof. Me Ricardo Carubbi
 
-# Trabalho Prático 3
+---
 
-Esta atividade vale `1,0 ponto`.
+# Problema do Carteiro Chinês (PCC) - Trabalho Prático 3
 
-## Tema
+Este projeto implementa uma solução para o **Problema do Carteiro Chinês** em dígrafos ponderados. O objetivo é encontrar o circuito de menor custo que percorra todas as arestas de um grafo dirigido pelo menos uma vez.
 
-Implemente, em **Python** ou em **Java**, um programa para encontrar um **circuito euleriano** em um dígrafo ponderado já eulerizado, no contexto do **Problema do Carteiro Chinês**.
+## 📋 Descrição da Eulerização
 
-O grafo oficial de entrada deste trabalho é o representado na [figura 1](../../imgs/T3/graph.png), baseada no material discutido em [instrucoes.md](./instrucoes.md). A ideia central é separar o trabalho em duas partes:
+Para que um dígrafo admita um circuito euleriano, ele deve estar **balanceado** (o grau de entrada de cada vértice deve ser igual ao seu grau de saída) e ser fortemente conexo.
 
-1. uma **parte manual**, em que o aluno analisa o grafo original, identifica os vértices desbalanceados e altera a lista de arestas para obter um grafo eulerizado;
-2. uma **parte programada**, em que o aluno implementa o **método de Hierholzer** para encontrar o circuito euleriano no grafo alterado.
+A eulerização deste trabalho foi realizada manualmente através da análise do grafo original (`entrada_original.txt`). Foram identificados os vértices desbalanceados e adicionadas arestas repetidas para equilibrar os graus:
 
-As bases oficiais da disciplina para este trabalho são:
+* **Vértices Originais**: O grafo original possui 6 vértices e 11 arestas.
+* **Arestas Adicionadas**: Para balancear o grafo, foram replicadas arestas nos seguintes caminhos (marcadas com `*` no arquivo de entrada):
+    * `5 -> 2` (peso 22)
+    * `4 -> 0` (peso 12) - adicionada duas vezes
+    * `3 -> 4` (peso 5)
+    * `2 -> 3` (peso 20)
+    * `0 -> 1` (peso 10)
+* **Resultado**: O grafo final (`entrada_eulerizada.txt`) possui 17 arestas, resultando em um circuito total de custo **276**.
 
-- `algs4-py`, para implementações em **Python**;
-- `algs4-kw`, para implementações em **Java**.
+## 🚀 Instruções de Execução
 
-## Objetivo
+O projeto foi desenvolvido em **Python** e utiliza uma estrutura baseada na biblioteca `algs4`.
 
-Aplicar os conceitos de:
+### Pré-requisitos
+* Python 3.11 ou superior.
+* Jupyter Notebook (opcional, para rodar o `main.ipynb`).
 
-- modelagem de **dígrafos ponderados**;
-- cálculo de **grau de entrada** e **grau de saída**;
-- identificação de vértices **desbalanceados**;
-- eulerização manual de uma instância do **Problema do Carteiro Chinês**;
-- implementação do **método de Hierholzer** para obtenção de circuito euleriano.
+### Como executar
+1.  Certifique-se de que os arquivos de dados estão na pasta `pcc/dados/`.
+2.  Navegue até a pasta `pcc/src/`.
+3.  Execute o script principal (ou abra o notebook):
+    ```bash
+    python main.py
+    ```
+    *(Nota: Se estiver usando o notebook `main.ipynb`, execute todas as células para ver a saída formatada)*.
 
-## O que não deve ser implementado
+## 🛠 Estrutura do Código
+* `bag.py`: Implementação de uma coleção Bag para a lista de adjacência.
+* `digraph.py`: Estrutura de dados para o dígrafo ponderado.
+* `directed_edge.py`: Representação de uma aresta dirigida com peso.
+* `DirectedEulerianCycle.py`: Implementação do **Algoritmo de Hierholzer** para encontrar o circuito euleriano.
+* `main.ipynb`: Ponto de entrada que carrega os dados e exibe os resultados.
 
-Neste trabalho, os alunos **não devem implementar**:
+## 🎥 Vídeo Explicativo
+O vídeo com a explicação técnica e demonstração da execução pode ser acessado no link abaixo:
+* [https://www.youtube.com/]
 
-- algoritmo de **Floyd-Warshall**;
-- algoritmo de **emparelhamento ótimo com pesos**, como o **método húngaro**.
+---
 
-O papel conceitual desses algoritmos será reproduzido **manualmente** na construção do arquivo `entrada_eulerizada.txt`.
-
-## Entrada
-
-O trabalho utiliza dois arquivos de entrada no formato:
-
-```text
-V
-E
-v w peso
-v w peso
-...
-```
-
-onde:
-
-- `V` é o número de vértices;
-- `E` é o número de arestas dirigidas;
-- cada linha `v w peso` representa uma aresta dirigida de `v` para `w` com o peso indicado.
-
-Os arquivos mantidos em `dados/` neste repositório devem ser tratados como **exemplos de entrada**:
-
-- `dados/entrada_original.txt`: exemplo de dígrafo ponderado original;
-- `dados/entrada_eulerizada.txt`: exemplo de dígrafo após inserções manuais.
-
-Observação importante:
-
-- arestas repetidas são permitidas em `entrada_eulerizada.txt`, pois representam reutilização de arestas ou caminhos no percurso final.
-
-## Grafo oficial de entrada deste trabalho
-
-O grafo oficial de entrada deste trabalho é a figura abaixo:
-
-<img src="../../imgs/T3/graph.png" width="420">
-
-Figura 1. Grafo oficial de entrada do trabalho. Fonte: visualização adaptada de <https://algorithms.discrete.ma.tum.de/graph-algorithms/directed-chinese-postman/index_en.html>
-
-Os arquivos em `dados/` permanecem no projeto como **exemplos de entrada** e de eulerização, úteis para teste e como modelo de formatação.
-
-No desenvolvimento do trabalho, o aluno deve usar a figura como referência para:
-
-- reconstruir a instância original no formato exigido;
-- identificar os vértices desbalanceados;
-- construir manualmente a versão eulerizada correspondente.
-
-## Exemplos de entrada fornecidos
-
-Os seguintes arquivos permanecem disponíveis como exemplos:
-
-- `dados/entrada_original.txt`
-- `dados/entrada_eulerizada.txt`
-
-Eles ilustram:
-
-- o formato esperado de entrada;
-- a forma de representar a eulerização por meio de arestas repetidas;
-- o tipo de saída que o programa deve produzir.
-
-## O que o aluno deve fazer manualmente
-
-Cada aluno ou dupla deverá:
-
-- interpretar o grafo oficial apresentado na figura;
-- calcular os graus de entrada e saída de cada vértice;
-- identificar os vértices desbalanceados;
-- justificar quais arestas ou caminhos precisam ser acrescentados;
-- construir `dados/entrada_eulerizada.txt` com a instância balanceada.
-
-## O que o programa deve fazer
-
-O programa deve:
-
-1. ler `dados/entrada_eulerizada.txt`;
-2. construir o dígrafo ponderado;
-3. informar os graus de entrada e saída dos vértices;
-4. verificar se o grafo está balanceado;
-5. executar o **método de Hierholzer**;
-6. imprimir um **circuito euleriano**;
-7. informar o **custo total** do circuito.
-
-## Respostas esperadas para os exemplos de entrada
-
-Para os arquivos de exemplo mantidos em `dados/`, espera-se:
-
-- todos os vértices balanceados;
-- existência de circuito euleriano;
-- custo total igual a `14`.
-
-Um circuito euleriano válido para o exemplo eulerizado fornecido é:
-
-```text
-0 3 1 2 0 1 2 0
-```
-
-Observação:
-
-- outros circuitos eulerianos equivalentes podem ser aceitos, desde que utilizem todas as arestas exatamente uma vez.
-
-## Pontuação
-
-A nota do trabalho será dividida da seguinte forma:
-
-- **0,5 ponto**: grafo eulerizado + código;
-- **0,5 ponto**: vídeo explicativo.
-
-### Parte técnica: `0,5`
-
-- identificar corretamente os vértices desbalanceados: `0,10`
-- construir corretamente `entrada_eulerizada.txt`: `0,10`
-- justificar corretamente as inserções realizadas: `0,10`
-- implementar corretamente o método de Hierholzer: `0,10`
-- exibir corretamente o circuito e o custo total: `0,10`
-
-### Vídeo explicativo: `0,5`
-
-Duração esperada do vídeo:
-
-- `5` minutos por grupo.
-
-O vídeo deve apresentar:
-
-- a identificação do aluno ou da dupla e o tema do trabalho;
-- o problema e a instância adotada, com exibição da figura oficial usada como base;
-- a reconstrução da instância original e a identificação dos vértices desbalanceados;
-- a justificativa das arestas ou caminhos acrescentados na eulerização e a apresentação do arquivo `entrada_eulerizada.txt`;
-- a explicação da implementação do método de Hierholzer;
-- a execução completa do programa, com apresentação do circuito euleriano encontrado e do custo total obtido;
-- uma conclusão curta confirmando que o grafo final ficou balanceado e admitiu circuito euleriano.
-
-Sugestão de organização do vídeo:
-
-1. contextualização rápida do Problema do Carteiro Chinês e do objetivo do trabalho;
-2. análise manual da figura, incluindo vértices desbalanceados e decisão de eulerização;
-3. apresentação da solução implementada, com foco no método de Hierholzer;
-4. execução do programa e leitura comentada da saída;
-5. fechamento com a justificativa do circuito e do custo total.
-
-Não é suficiente apenas:
-
-- mostrar os arquivos sem explicação oral;
-- exibir o código rapidamente sem relacioná-lo ao algoritmo;
-- rodar o programa sem comentar a entrada, o circuito gerado e o custo;
-- afirmar que o grafo foi balanceado sem justificar as inserções realizadas.
-
-## Critérios de avaliação
-
-- correção da modelagem do dígrafo ponderado;
-- consistência entre `entrada_original.txt` e `entrada_eulerizada.txt`;
-- correção da eulerização manual;
-- correção da implementação do método de Hierholzer;
-- clareza da saída do programa;
-- clareza técnica da explicação em vídeo.
-
-## Requisitos
-
-- implementar a solução em **Python** ou **Java**;
-- usar como referência `algs4-py` no caso de Python e `algs4-kw` no caso de Java;
-- representar o grafo como **dígrafo ponderado**;
-- permitir arestas repetidas;
-- ler a entrada no formato indicado;
-- gerar saída textual clara.
-
-## Estrutura esperada do projeto
-
-```text
-t3-pcc/
-├── README.md
-├── T3.md
-├── T3_ava.html
-├── dados/
-│   ├── entrada_original.txt
-│   └── entrada_eulerizada.txt
-└── src/
-    ├── Main.java | main.py
-    ├── DirectedEdge.java | DirectedEdge.py
-    ├── Digraph.java | digraph.py
-    ├── DirectedEulerianCycle.java | DirectedEulerianCycle.py
-    └── demais classes auxiliares utilizadas
-```
-
-## Entrega
-
-A entrega deverá conter:
-
-- o projeto completo em um repositório GitHub;
-- o arquivo `README.md` com:
-  - breve explicação da eulerização realizada;
-  - instruções de execução;
-  - **link do vídeo**;
-- o vídeo hospedado por link, por exemplo em:
-  - Google Drive;
-  - YouTube não listado;
-  - outra plataforma com acesso por URL.
-
-## Observações
-
-- O link do vídeo deve constar obrigatoriamente no `README.md`.
-- A ausência do link no `README.md` torna a entrega incompleta.
-- O arquivo `Main.java` ou `main.py` deverá ser o ponto de entrada do programa.
-- O algoritmo implementado pelo aluno é o **método de Hierholzer**; a etapa de eulerização é manual.
-- A implementação de referência utilizada como base conceitual para este trabalho pode ser consultada em: <https://algorithms.discrete.ma.tum.de/graph-algorithms/directed-chinese-postman/index_en.html>
+### Resultados Obtidos (Exemplo de Saída)
+Ao processar o arquivo eulerizado, o programa gera a seguinte saída:
+* **Graus**: Todos os vértices apresentam `in_degree == out_degree`.
+* **Circuito Encontrado**: `a → b → d → e → a → b → e → a → c → e → f → c → d → f → c → d → e → a`.
+* **Custo Total**: 276.
