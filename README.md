@@ -27,16 +27,11 @@ O projeto foi desenvolvido em **Python** e utiliza uma estrutura baseada na bibl
 
 ### Pré-requisitos
 * Python 3.11 ou superior.
-* Jupyter Notebook (opcional, para rodar o `main.ipynb`).
+* Jupyter Notebook (rodar o `main.ipynb`).
 
 ### Como executar
-1.  Certifique-se de que os arquivos de dados estão na pasta `pcc/dados/`.
-2.  Navegue até a pasta `pcc/src/`.
-3.  Execute o script principal (ou abra o notebook):
-    ```bash
-    python main.py
-    ```
-    *(Nota: Se estiver usando o notebook `main.ipynb`, execute todas as células para ver a saída formatada)*.
+1.  Navegue até a pasta `pcc/src/`.
+2.  Execute todas as células no notebook `main.ipynb`para ver a saída formatada.
 
 ## 🛠 Estrutura do Código
 * `bag.py`: Implementação de uma coleção Bag para a lista de adjacência.
