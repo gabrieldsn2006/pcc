@@ -36,7 +36,11 @@ class DirectedEulerianCycle:
         self.circuit = []
         self.valid = False
         self.subtours = []  # Para armazenar os subtours encontrados
+        self._cost = 0
         self._find_circuit()
+
+    def circuit_cost(self):
+        return self._cost
 
     def _has_eulerian_circuit(self):
         """
@@ -169,6 +173,7 @@ class DirectedEulerianCycle:
                     edge = (current, neighbor)
                     if edge not in edges_used:
                         edges_used.add(edge)
+                        self._cost += weight
                         u = neighbor
                         break
                 
