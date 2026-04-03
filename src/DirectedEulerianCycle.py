@@ -4,9 +4,11 @@ Algoritmo de Hierholzer para encontrar circuitos Eulerianos.
 Um circuito Euleriano é um caminho que visita cada aresta exatamente uma vez
 e retorna ao vértice de partida.
 
-Pré-condições para um grafo não-dirigido ter um circuito Euleriano:
-    1. O grafo deve ser conexo
-    2. Todos os vértices devem ter grau par
+Pré-condições para um grafo dirigido ter um circuito Euleriano:
+    1. Todos os vértices devem ter grau de entrada igual ao grau de saída
+    2. O grafo deve ser conexo (todos vértices com arestas conectados)
+
+Permite arestas múltiplas (multigrafo).
 
 Complexidade:
     - Tempo: O(V + E)
@@ -14,6 +16,8 @@ Complexidade:
 """
 
 from digraph import Digraph
+from directed_edge import DirectedEdge
+from collections import defaultdict
 
 class DirectedEulerianCycle:
     """
@@ -30,17 +34,39 @@ class DirectedEulerianCycle:
         Inicializa o algoritmo de Hierholzer.
         
         Args:
-            graph: objeto Digraph com lista de adjacência
+            digraph: objeto Digraph com lista de adjacência
         """
         self.digraph = digraph
         self.circuit = []
         self.valid = False
         self.subtours = []  # Para armazenar os subtours encontrados
         self._cost = 0
+        
+        # Criar cópia de trabalho das arestas como DirectedEdge
+        # Permite rastrear arestas múltiplas corretamente
+        self.working_adj = self._create_working_adjacency()
+        
         self._find_circuit()
 
     def circuit_cost(self):
         return self._cost
+    
+    def _create_working_adjacency(self):
+        """
+        Cria uma cópia de trabalho das arestas do grafo como objetos DirectedEdge.
+        Isso permite rastrear corretamente arestas múltiplas durante o algoritmo.
+        
+        Returns:
+            list: lista de listas de DirectedEdge para cada vértice
+        """
+        working_adj = [[] for _ in range(self.digraph.V)]
+        
+        for v in range(self.digraph.V):
+            for w, weight in self.digraph.adj[v]:
+                edge = DirectedEdge(v, w, weight)
+                working_adj[v].append(edge)
+        
+        return working_adj
 
     def _has_eulerian_circuit(self):
         """
@@ -110,6 +136,10 @@ class DirectedEulerianCycle:
         """
         Encontra o circuito Euleriano usando o algoritmo de Hierholzer.
         
+        Utiliza uma cópia de trabalho das arestas (DirectedEdge) que é modificada
+        conforme as arestas são visitadas. Isso permite tratar corretamente
+        arestas múltiplas entre os mesmos vértices.
+        
         Segue o pseudo-código:
         BEGIN
           IF graph infeasible THEN END
@@ -141,9 +171,6 @@ class DirectedEulerianCycle:
         # Inicializar tour com o vértice inicial
         tour = [start]
         
-        # Rastrear arestas usadas
-        edges_used = set()
-        
         # Armazenar subtours encontrados (para visualização)
         self.subtours = []
         
@@ -152,7 +179,7 @@ class DirectedEulerianCycle:
             # Procurar um nó em tour que tenha arestas não visitadas
             node_with_edge = None
             for node in tour:
-                if self._has_unvisited_edge(node, edges_used):
+                if self._has_unvisited_edge(node):
                     node_with_edge = node
                     break
             
@@ -167,19 +194,15 @@ class DirectedEulerianCycle:
             
             # DO-WHILE: construir subtour até retornar ao nó inicial
             while True:
-                # Pegar uma aresta não visitada (current, u)
-                u = None
-                for neighbor, weight in self.digraph.adj[current]:
-                    edge = (current, neighbor)
-                    if edge not in edges_used:
-                        edges_used.add(edge)
-                        self._cost += weight
-                        u = neighbor
-                        break
+                # Pegar uma aresta não visitada (current, u) e removê-la
+                edge = self._get_and_remove_unvisited_edge(current)
                 
                 # Se não encontrou aresta, problema (não deveria acontecer)
-                if u is None:
+                if edge is None:
                     break
+                
+                u = edge.To()
+                self._cost += edge.weight
                 
                 # Adicionar u ao subtour
                 subtour.append(u)
@@ -198,13 +221,33 @@ class DirectedEulerianCycle:
         self.circuit = tour
         self.valid = True
     
-    def _has_unvisited_edge(self, node, edges_used):
-        """Verifica se um nó tem arestas não visitadas."""
-        for neighbor, weight in self.digraph.adj[node]:
-            edge = (node, neighbor)
-            if edge not in edges_used:
-                return True
-        return False
+    def _has_unvisited_edge(self, node):
+        """
+        Verifica se um nó tem arestas não visitadas (ainda presentes no working_adj).
+        
+        Args:
+            node: índice do vértice
+            
+        Returns:
+            bool: True se o vértice tem arestas não visitadas
+        """
+        return len(self.working_adj[node]) > 0
+    
+    def _get_and_remove_unvisited_edge(self, node):
+        """
+        Obtém uma aresta não visitada de um vértice e a remove da adjacência de trabalho.
+        Permite rastrear corretamente arestas múltiplas.
+        
+        Args:
+            node: índice do vértice
+            
+        Returns:
+            DirectedEdge: a aresta encontrada, ou None se não houver arestas
+        """
+        if len(self.working_adj[node]) > 0:
+            edge = self.working_adj[node].pop()  # Remove e retorna a última aresta
+            return edge
+        return None
     
     def _integrate_subtour(self, tour, subtour, start_node):
         """
