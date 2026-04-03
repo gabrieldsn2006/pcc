@@ -5,7 +5,8 @@ class DirectedEdge:
         self.weight = weight
 
     def __str__(self):
-        return "%d->%s %.5f" % (self.v, self.w, self.weight)
+        str = "%d->%d %.5f" % (self.v, self.w, self.weight)
+        return str
 
     def __lt__(self, other):
         return self.weight < other.weight

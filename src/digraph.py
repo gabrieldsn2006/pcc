@@ -11,7 +11,16 @@ class Digraph:
 
     def __str__(self):
         s = "%d vertices, %d edges\n" % (self.V, self.E)
-        s += "\n".join("%d: %s" % (v, " ".join(str(w) for w in self.adj[v])) for v in range(self.V))
+        s += "\n".join(
+            "%s: %s" % (
+                chr(ord('a') + v),
+                " ".join(
+                    "(%s, %d)" % (chr(ord('a') + w), weight)
+                    for w, weight in self.adj[v]
+                )
+            )
+            for v in range(self.V)
+        )
         return s
 
     def add_edge(self, v, w, weight):

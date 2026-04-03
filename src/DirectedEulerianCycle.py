@@ -297,12 +297,12 @@ class DirectedEulerianCycle:
             return "Nenhum circuito Euleriano existe neste grafo."
         
         s = "Circuito Euleriano encontrado:\n"
-        s += " → ".join(str(v) for v in self.circuit)
+        s += " → ".join(str(v.__str__().replace("0", "a").replace("1", "b").replace("2", "c").replace("3", "d").replace("4", "e").replace("5", "f")) for v in self.circuit)
         
         # Mostrar subtours também
         if self.subtours:
             s += f"\n\nSubtours integrados ({len(self.subtours)} total):\n"
             for i, subtour in enumerate(self.subtours):
-                s += f"  Subtour {i+1}: {' → '.join(str(v) for v in subtour)}\n"
+                s += f"  Subtour {i+1}: {' → '.join(str(v.__str__().replace("0", "a").replace("1", "b").replace("2", "c").replace("3", "d").replace("4", "e").replace("5", "f")) for v in subtour)}\n"
         
         return s
