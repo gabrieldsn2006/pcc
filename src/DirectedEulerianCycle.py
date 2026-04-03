@@ -17,7 +17,6 @@ Complexidade:
 
 from digraph import Digraph
 from directed_edge import DirectedEdge
-from collections import defaultdict
 
 class DirectedEulerianCycle:
     """
