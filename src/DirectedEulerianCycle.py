@@ -24,8 +24,11 @@ class DirectedEulerianCycle:
     o algoritmo de Hierholzer.
     
     Attributes:
+        digraph: o grafo dirigido de entrada'
         circuit: lista contendo o circuito Euleriano encontrado
         valid: boolean indicando se um circuito Euleriano existe
+        subtours: lista de subtours encontrados durante a execução (para visualização)
+        _cost: custo total do circuito Euleriano (soma dos pesos das arestas)
     """
 
     def __init__(self, digraph: Digraph):
@@ -48,6 +51,7 @@ class DirectedEulerianCycle:
         self._find_circuit()
 
     def circuit_cost(self):
+        """Retorna o custo total do circuito Euleriano encontrado."""
         return self._cost
     
     def _create_working_adjacency(self):
