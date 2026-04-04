@@ -42,7 +42,7 @@ O projeto foi desenvolvido em **Python** e utiliza uma estrutura baseada na bibl
 
 ## Vídeo Explicativo
 O vídeo com a explicação técnica e demonstração da execução pode ser acessado no link abaixo:
-* [https://www.youtube.com/]
+* [https://www.youtube.com/watch?v=Wp4oume6Fpo]
 
 ---
 
